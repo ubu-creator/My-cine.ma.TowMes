@@ -1,6 +1,6 @@
 <style>
   body {
-    background-color: #1a031a; /* أرجواني مغلوق */
+    background-color: #1a031a; 
     margin: 0;
     padding: 0;
     display: flex;
@@ -9,41 +9,42 @@
     justify-content: center;
     height: 100vh;
     overflow: hidden;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', sans-serif;
   }
 
   .title-container {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     line-height: 1.1;
   }
 
   .title-main {
     color: #e60000; /* أحمر مغلوق */
-    font-size: 28px;
-    font-weight: bold;
+    font-size: 42px; /* تكبير العنوان */
+    font-weight: 900;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    text-shadow: 2px 2px 4px #000;
+    letter-spacing: 3px;
+    text-shadow: 3px 3px 6px #000;
   }
 
   .title-sub {
-    color: #ff3333;
-    font-size: 18px;
+    color: #ffffff; /* ميني باللون الأبيض */
+    font-size: 28px; /* تكبير ميني */
     font-style: italic;
-    display: block; /* mini تحت الكلمتين */
-    margin-top: 2px;
+    display: block;
+    margin-top: 5px;
+    text-shadow: 2px 2px 4px #000;
   }
 
   .video-container {
     position: relative;
-    width: 85%;
-    max-width: 900px;
-    padding-bottom: 47.81%; 
+    width: 88%;
+    max-width: 950px;
+    padding-bottom: 49.5%; 
     height: 0;
-    box-shadow: 0 0 30px rgba(230, 0, 0, 0.4);
-    border: 2px solid #330033;
-    border-radius: 12px;
+    box-shadow: 0 0 40px rgba(230, 0, 0, 0.4);
+    border: 3px solid #330033;
+    border-radius: 15px;
     overflow: hidden;
     background-color: #000;
   }
@@ -58,11 +59,10 @@
   }
 
   .footer-copyright {
-    color: #ffff00; /* أصفر صغير */
-    font-size: 10px;
-    margin-top: 20px;
-    opacity: 0.8;
-    letter-spacing: 1px;
+    color: #ffff00;
+    font-size: 11px;
+    margin-top: 25px;
+    opacity: 0.9;
   }
 </style>
 
@@ -72,8 +72,8 @@
 </div>
 
 <div class="video-container">
-  <iframe src="https://www.youtube-nocookie.com/embed/9No-FiEInLA?autoplay=1&rel=0" 
-          allow="autoplay; fullscreen" 
+  <iframe src="https://www.youtube.com/embed/9No-FiEInLA?autoplay=1&rel=0&controls=1&vq=hd1080" 
+          allow="autoplay; fullscreen; encrypted-media" 
           allowfullscreen>
   </iframe>
 </div>
