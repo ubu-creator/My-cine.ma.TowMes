@@ -1,69 +1,10 @@
 <style>
-  body {
-    background-color: #1a031a; 
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    overflow: hidden;
-    font-family: 'Segoe UI', sans-serif;
-  }
-
-  .title-container {
-    text-align: center;
-    margin-bottom: 25px;
-    line-height: 1.1;
-  }
-
-  .title-main {
-    color: #e60000; /* أحمر مغلوق */
-    font-size: 42px; /* تكبير العنوان */
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    text-shadow: 3px 3px 6px #000;
-  }
-
-  .title-sub {
-    color: #ffffff; /* ميني باللون الأبيض */
-    font-size: 28px; /* تكبير ميني */
-    font-style: italic;
-    display: block;
-    margin-top: 5px;
-    text-shadow: 2px 2px 4px #000;
-  }
-
-  .video-container {
-    position: relative;
-    width: 88%;
-    max-width: 950px;
-    padding-bottom: 49.5%; 
-    height: 0;
-    box-shadow: 0 0 40px rgba(230, 0, 0, 0.4);
-    border: 3px solid #330033;
-    border-radius: 15px;
-    overflow: hidden;
-    background-color: #000;
-  }
-
-  .video-container iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-  }
-
-  .footer-copyright {
-    color: #ffff00;
-    font-size: 11px;
-    margin-top: 25px;
-    opacity: 0.9;
-  }
+  body { background-color: #1a031a; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; font-family: sans-serif; }
+  .title-main { color: #e60000; font-size: 42px; font-weight: 900; text-transform: uppercase; text-shadow: 3px 3px 6px #000; }
+  .title-sub { color: #ffffff; font-size: 28px; font-style: italic; display: block; margin-bottom: 20px; }
+  .video-container { position: relative; width: 88%; max-width: 950px; padding-bottom: 49.5%; height: 0; box-shadow: 0 0 40px rgba(230, 0, 0, 0.4); border: 3px solid #330033; border-radius: 15px; overflow: hidden; }
+  .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+  .footer { color: #ffff00; font-size: 11px; margin-top: 25px; }
 </style>
 
 <div class="title-container">
@@ -71,13 +12,17 @@
   <span class="title-sub">mini</span>
 </div>
 
-<div class="video-container">
-  <iframe src="https://www.youtube.com/embed/9No-FiEInLA?autoplay=1&rel=0&controls=1&vq=hd1080" 
-          allow="autoplay; fullscreen; encrypted-media" 
-          allowfullscreen>
-  </iframe>
-</div>
+<div class="video-container" id="player">
+  </div>
 
-<div class="footer-copyright">
-  Developed by TowMes©™
-</div>
+<div class="footer">Developed by TowMes©™</div>
+
+<script>
+  // وظيفة ذكية لاستخراج معرف الفيديو من الرابط
+  const urlParams = new URLSearchParams(window.location.search);
+  const videoId = urlParams.get('id') || '9No-FiEInLA'; // فيديو افتراضي إذا لم يوجد معرف
+  
+  document.getElementById('player').innerHTML = `
+    <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&controls=1&vq=hd1080" 
+            allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+</script>
