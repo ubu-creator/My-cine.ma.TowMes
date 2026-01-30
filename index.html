@@ -1,28 +1,79 @@
-<style>
-  body { background-color: #1a031a; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; font-family: sans-serif; }
-  .title-main { color: #e60000; font-size: 42px; font-weight: 900; text-transform: uppercase; text-shadow: 3px 3px 6px #000; }
-  .title-sub { color: #ffffff; font-size: 28px; font-style: italic; display: block; margin-bottom: 20px; }
-  .video-container { position: relative; width: 88%; max-width: 950px; padding-bottom: 49.5%; height: 0; box-shadow: 0 0 40px rgba(230, 0, 0, 0.4); border: 3px solid #330033; border-radius: 15px; overflow: hidden; }
-  .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-  .footer { color: #ffff00; font-size: 11px; margin-top: 25px; }
-</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOME CINEMA mini</title>
+    <style>
+        body { background-color: #1a0000; color: white; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; }
+        
+        /* شريط العنوان المتحرك */
+        .marquee-container { background: linear-gradient(90deg, #800000, #b30000); padding: 5px 0; border-bottom: 2px solid #ffd700; }
+        marquee { font-size: 20px; font-weight: bold; }
+        .yellow-text { color: #ffd700; } /* HOME CINEMA */
+        .white-text { color: #ffffff; } /* mini */
 
-<div class="title-container">
-  <span class="title-main">HOME CINEMA</span>
-  <span class="title-sub">mini</span>
+        /* حاوية المشغل والساعة */
+        .main-container { position: relative; width: 100vw; height: calc(100vh - 40px); background: #000; }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        /* ساعة العقارب الصغيرة */
+        #clock { position: absolute; top: 10px; right: 10px; width: 50px; height: 50px; border: 2px solid #ffd700; border-radius: 50%; background: #1a0000; z-index: 10; }
+        .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom; background: #ffd700; border-radius: 5px; }
+        .hour { width: 2px; height: 12px; z-index: 3; }
+        .min { width: 2px; height: 18px; z-index: 2; }
+        .sec { width: 1px; height: 20px; background: #ff0000; z-index: 1; }
+    </style>
+</head>
+<body>
+
+<div class="marquee-container">
+    <marquee scrollamount="5">
+        <span class="yellow-text">HOME CINEMA</span> <span class="white-text">mini</span> 
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        <span id="category-display" style="color: #ffd700; text-transform: uppercase;"></span>
+    </marquee>
 </div>
 
-<div class="video-container" id="player">
-  </div>
-
-<div class="footer">Developed by TowMes©™</div>
+<div class="main-container">
+    <div id="clock">
+        <div class="hand hour" id="hour"></div>
+        <div class="hand min" id="min"></div>
+        <div class="hand sec" id="sec"></div>
+    </div>
+    <div id="player"></div>
+</div>
 
 <script>
-  // وظيفة ذكية لاستخراج معرف الفيديو من الرابط
-  const urlParams = new URLSearchParams(window.location.search);
-  const videoId = urlParams.get('id') || '9No-FiEInLA'; // فيديو افتراضي إذا لم يوجد معرف
-  
-  document.getElementById('player').innerHTML = `
-    <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&controls=1&vq=hd1080" 
-            allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+    // نظام المشغل الذكي
+    const urlParams = new URLSearchParams(window.location.search);
+    const listId = urlParams.get('list');
+    const channelId = urlParams.get('channel');
+    const catName = urlParams.get('cat');
+
+    if(catName) document.getElementById('category-display').innerText = " | Now Watching: " + catName;
+
+    let embedUrl = "";
+    if(listId) {
+        embedUrl = `https://www.youtube.com/embed?listType=playlist&list=${listId}&autoplay=1&rel=0&cc_load_policy=1`;
+    } else if(channelId) {
+        embedUrl = `https://www.youtube.com/embed/live_stream?channel=${channelId}&autoplay=1&rel=0&cc_load_policy=1`;
+    }
+
+    document.getElementById('player').innerHTML = `<iframe src="${embedUrl}" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+
+    // نظام الساعة
+    function updateClock() {
+        const now = new Date();
+        const s = now.getSeconds() * 6;
+        const m = now.getMinutes() * 6;
+        const h = (now.getHours() % 12) * 30 + (m / 12);
+        document.getElementById('sec').style.transform = `translateX(-50%) rotate(${s}deg)`;
+        document.getElementById('min').style.transform = `translateX(-50%) rotate(${m}deg)`;
+        document.getElementById('hour').style.transform = `translateX(-50%) rotate(${h}deg)`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
 </script>
+</body>
+</html>
