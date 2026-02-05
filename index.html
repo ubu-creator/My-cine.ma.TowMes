@@ -3,70 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azraq2 - TowMes©™</title>
     <style>
-        body { background-color: #050505; color: #ffffff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
-        header { background: linear-gradient(to bottom, #e50914, #050505); padding: 20px; text-align: center; font-size: 24px; font-weight: bold; }
-        .categories { display: flex; overflow-x: auto; padding: 10px; gap: 10px; background: #111; position: sticky; top: 0; z-index: 100; }
-        .category-btn { background: #333; color: white; border: none; padding: 8px 15px; border-radius: 20px; white-space: nowrap; cursor: pointer; }
-        .category-btn.active { background: #e50914; }
-        .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; padding: 15px; }
-        .movie-card { background: #1a1a1a; border-radius: 8px; overflow: hidden; transition: 0.3s; cursor: pointer; }
-        .movie-card:hover { transform: scale(1.05); }
-        .movie-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
-        .movie-card h4 { font-size: 14px; padding: 8px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        #player-container { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 1000; }
-        .close-btn { position: absolute; top: 20px; right: 20px; font-size: 30px; cursor: pointer; color: white; }
+        :root {
+            --deep-red: #8b0000;
+            --bg-dark: #050505;
+            --card-bg: #121212;
+            --text-gold: #d4af37;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: var(--deep-red);
+            color: white;
+            font-size: 14px;
+            padding: 5px 15px;
+            text-align: center;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        /* Header with Clock & Info */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: linear-gradient(to bottom, #1a0000, var(--bg-dark));
+            border-bottom: 2px solid var(--deep-red);
+        }
+
+        .info-panel { font-size: 12px; line-height: 1.4; }
+        
+        /* Analog Clock Style Mockup */
+        .analog-clock {
+            width: 40px; height: 40px;
+            border: 2px solid white;
+            border-radius: 50%;
+            position: relative;
+        }
+        .analog-clock::after {
+            content: ''; position: absolute; width: 2px; height: 15px;
+            background: white; top: 5px; left: 19px; transform-origin: bottom;
+            animation: rotate 60s linear infinite;
+        }
+
+        @keyframes rotate { from {transform: rotate(0deg);} to {transform: rotate(360deg);} }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Sub-Menu (Side Navigation) */
+        nav {
+            width: 200px;
+            background: var(--card-bg);
+            border-right: 1px solid #333;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .nav-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            background: #1a1a1a;
+            cursor: pointer;
+            transition: 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: var(--deep-red);
+            border-left: 4px solid white;
+        }
+
+        .nav-item span { display: block; font-size: 14px; font-weight: bold; }
+        .nav-item small { font-size: 11px; color: #bbb; }
+
+        /* Content Area */
+        main {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid #222;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+
+        .card:hover { transform: translateY(-5px); border-color: var(--deep-red); }
+        .card img { width: 100%; aspect-ratio: 16/9; object-fit: cover; filter: brightness(0.8); }
+
+        /* Footer */
+        footer {
+            background: #000;
+            text-align: center;
+            padding: 10px;
+            font-size: 12px;
+            border-top: 1px solid var(--deep-red);
+        }
+
+        /* Back to Top Button */
+        #backToTop {
+            position: fixed;
+            bottom: 60px;
+            right: 20px;
+            background: var(--deep-red);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            nav { width: 80px; }
+            .nav-item span { font-size: 10px; }
+            .nav-item small { display: none; }
+        }
     </style>
 </head>
 <body>
 
-<header>Azraq2 Movies</header>
+<div class="top-bar">M.A.M All Free Documentaries / Relax and enjoy....</div>
 
-<div class="categories">
-    <button class="category-btn active" onclick="loadCategory('Action')">Action</button>
-    <button class="category-btn" onclick="loadCategory('Crime')">Crime</button>
-    <button class="category-btn" onclick="loadCategory('Western')">Western</button>
-    <button class="category-btn" onclick="loadCategory('Indian')">Indian</button>
-    <button class="category-btn" onclick="loadCategory('Docs')">Documentaries</button>
+<header>
+    <div class="info-panel">
+        <div id="gregorian"></div>
+        <div id="hijri">Calculating Hijri...</div>
+        <div id="weather">Weather: 22°C Clear</div>
+    </div>
+    <div style="text-align: center;">
+        <h2 style="margin:0; color:var(--deep-red);">TowMes</h2>
+        <small>Azraq2 Premium Edition</small>
+    </div>
+    <div class="analog-clock" title="Live Clock"></div>
+</header>
+
+<div class="main-container">
+    <nav id="subMenu">
+        </nav>
+
+    <main id="content">
+        <div class="grid" id="movieGrid">
+            <p style="color:#666;">Waiting for video links... (Please provide your links to fill the grid)</p>
+        </div>
+    </main>
 </div>
 
-<div class="movie-grid" id="movie-grid"></div>
+<button id="backToTop" onclick="scrollToTop()">UP ↑</button>
 
-<div id="player-container">
-    <span class="close-btn" onclick="closePlayer()">&times;</span>
-    <iframe id="video-player" width="100%" height="100%" src="" frameborder="0" allowfullscreen></iframe>
-</div>
+<footer>
+    Developed by TowMes©™ | <span style="color:var(--deep-red)">Developed by Mistoo (Mistoo-Dev)</span>
+</footer>
 
 <script>
-// Data Store with specific YouTube Playlist IDs
-const playlistData = {
-    'Action': 'PL86F0D497793CAA7E', // Example: Action Movie Trailers
-    'Crime': 'PLHPTxTxtC0iaAOCvHStN8V0S8m_O_0Mv2', // Crime Trailers
-    'Western': 'PLf7C6L3q-T0v6k0v6p7H9xI5g5E6WpE8I', // Western Genre
-    'Indian': 'PLfS6G_D4X7mQ3v-N-Z7P7A7A7A', // Bollywood / Indian
-    'Docs': 'PL6F46A94F50C920D4' // Documentary Central
-};
+    const categories = [
+        { en: "Deep Blue", ar: "أسرار البحار" },
+        { en: "Forests", ar: "قلب الغابات" },
+        { en: "Universe", ar: "الكون والفضاء" },
+        { en: "Ancient", ar: "الحضارات القديمة" },
+        { en: "Geology", ar: "تضاريس الأرض" },
+        { en: "City Bio", ar: "سيرة المدن" },
+        { en: "Discovery", ar: "الاكتشافات" },
+        { en: "War", ar: "عالم الحروب" },
+        { en: "Psychology", ar: "علم النفس" },
+        { en: "Philosophy", ar: "الفلسفة" }
+    ];
 
-function loadCategory(cat) {
-    // Note: In a real app, you'd use YouTube Data API to fetch these dynamically.
-    // For now, this is a placeholder that shows how the UI responds.
-    document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
-    
-    // Simulate movie items (You can manually add IDs here or fetch via API)
-    const grid = document.getElementById('movie-grid');
-    grid.innerHTML = '<p style="padding:20px;">Loading ' + cat + ' movies...</p>';
-    
-    // Redirecting to YouTube Playlist UI for simplicity & full functionality
-    setTimeout(() => {
-        window.location.href = `https://www.youtube.com/playlist?list=${playlistData[cat]}`;
-    }, 1000);
-}
+    const menu = document.getElementById('subMenu');
+    categories.forEach(cat => {
+        menu.innerHTML += `
+            <div class="nav-item">
+                <span>${cat.en}</span>
+                <small>${cat.ar}</small>
+            </div>
+        `;
+    });
 
-function closePlayer() {
-    document.getElementById('player-container').style.display = 'none';
-    document.getElementById('video-player').src = '';
-}
+    // Date & Time Logic
+    document.getElementById('gregorian').innerText = new Date().toLocaleDateString('en-GB');
+    
+    // Simple Hijri Approximation
+    const options = { calendar: 'islamic-uma', day: 'numeric', month: 'long', year: 'numeric' };
+    document.getElementById('hijri').innerText = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-uma', options).format(new Date());
+
+    // Scroll Logic
+    const mainArea = document.querySelector('main');
+    mainArea.onscroll = function() {
+        if (mainArea.scrollTop > 200) {
+            document.getElementById('backToTop').style.display = 'block';
+        } else {
+            document.getElementById('backToTop').style.display = 'none';
+        }
+    };
+
+    function scrollToTop() {
+        mainArea.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 </script>
 
 </body>
