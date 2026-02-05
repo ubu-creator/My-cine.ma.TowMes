@@ -3,81 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azraq2 - TowMes©™</title>
     <style>
         :root {
             --deep-red: #8b0000;
             --bg-dark: #050505;
             --card-bg: #121212;
-            --gold-yellow: #ffcc00;
+            --gold: #ffcc00;
         }
 
         body {
             background-color: var(--bg-dark);
             color: white;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0; padding: 0;
+            display: flex; flex-direction: column;
+            height: 100vh; overflow: hidden;
         }
 
-        /* شريط علوي متحرك */
-        .marquee {
+        /* 1. الشريط العلوي المتحرك */
+        .moving-bar {
             background: var(--deep-red);
-            overflow: hidden;
-            white-space: nowrap;
-            padding: 4px 0;
-            font-size: 13px;
-            font-weight: bold;
+            white-space: nowrap; overflow: hidden;
+            padding: 3px 0; font-weight: bold; font-size: 13px;
         }
-        .marquee span {
-            display: inline-block;
-            animation: scroll 15s linear infinite;
+        .moving-bar span {
+            display: inline-block; padding-left: 100%;
+            animation: marquee 15s linear infinite;
         }
-        @keyframes scroll {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
+        @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
 
-        /* الهيدر المحسن */
+        /* 2. الهيدر المصغر والساعات */
         header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 15px;
-            background: #111;
-            border-bottom: 1px solid var(--deep-red);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 5px 15px; background: #111; border-bottom: 1px solid var(--deep-red);
         }
 
-        .date-box { font-size: 11px; color: #ccc; }
-        .brand-small { font-size: 20px; color: var(--deep-red); font-weight: bold; }
+        .date-info { font-size: 10px; color: #bbb; }
+        .brand-name { font-size: 22px; color: var(--deep-red); font-weight: 800; }
 
-        /* الساعة المطورة بأرقام وعقارب صفراء */
-        .clock-container {
-            width: 45px; height: 45px;
-            border: 2px solid white;
-            border-radius: 50%;
-            position: relative;
-            background: black;
-        }
-        .clock-container::before { /* أرقام وهمية للجمالية */
-            content: '12 . 3 . 6 . 9';
-            position: absolute; width: 100%; text-align: center;
-            font-size: 8px; color: white; top: 2px;
+        .clocks-box { display: flex; align-items: center; gap: 10px; }
+        
+        /* ساعة العقارب الحقيقية */
+        .analog {
+            width: 35px; height: 35px; border: 2px solid white;
+            border-radius: 50%; position: relative; background: black;
         }
         .hand {
             position: absolute; bottom: 50%; left: 50%;
-            transform-origin: bottom; border-radius: 2px;
+            transform-origin: bottom; transform: translateX(-50%);
+            background: var(--gold); border-radius: 2px;
         }
-        .minute { width: 2px; height: 18px; background: var(--gold-yellow); animation: rotate 3600s linear infinite; }
-        .second { width: 1px; height: 20px; background: yellow; animation: rotate 60s linear infinite; }
+        .h-hand { width: 2px; height: 10px; }
+        .m-hand { width: 1.5px; height: 14px; }
+        .s-hand { width: 1px; height: 16px; background: yellow; }
 
-        @keyframes rotate { from { transform: translateX(-50%) rotate(0deg); } to { transform: translateX(-50%) rotate(360deg); } }
+        /* الساعة الرقمية */
+        #digital-clock { font-family: monospace; font-size: 12px; color: var(--gold); font-weight: bold; }
 
-        /* الأبواب الجانبية */
-        .main-layout { display: flex; flex: 1; overflow: hidden; }
+        /* 3. الهيكل الرئيسي */
+        .main-layout { display: flex; flex: 1; overflow: hidden; position: relative; }
+
         nav {
             width: 150px; background: #0a0a0a;
             overflow-y: auto; border-right: 1px solid #222;
@@ -86,81 +72,126 @@
             padding: 12px 5px; text-align: center;
             border-bottom: 1px solid #1a1a1a; cursor: pointer;
         }
-        .door span { display: block; font-size: 14px; font-weight: bold; margin-bottom: 4px; }
-        .door small { 
-            display: block; 
-            font-size: 15px; /* تكبير الخط العربي */
-            color: var(--gold-yellow); /* اللون الأصفر */
-            font-weight: bold;
+        .door:hover { background: var(--deep-red); }
+        .door span { display: block; font-size: 13px; font-weight: 900; color: white; } /* English Bold */
+        .door small { display: block; font-size: 15px; color: var(--gold); font-weight: bold; } /* Arabic Large Yellow */
+
+        /* الساب منيو الجانبي */
+        #sideMenu {
+            position: absolute; right: -210px; top: 0;
+            width: 200px; height: 100%; background: #111;
+            transition: 0.4s; z-index: 1000; border-left: 2px solid var(--deep-red);
+        }
+        .menu-btn {
+            position: absolute; right: 0; top: 40%;
+            background: var(--deep-red); color: white; border: none;
+            padding: 15px 5px; cursor: pointer; border-radius: 8px 0 0 8px; z-index: 1001;
+        }
+        .side-item { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-size: 13px; }
+
+        main { flex: 1; padding: 15px; overflow-y: auto; background: var(--bg-dark); }
+        
+        /* أيقونة الصعود */
+        #goUp {
+            position: fixed; bottom: 60px; right: 20px;
+            background: var(--deep-red); color: white; border: none;
+            width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+            display: none; font-size: 20px; z-index: 999;
         }
 
-        /* المنيو الجانبي للسهم */
-        #sideArrow {
-            position: fixed; right: 0; top: 50%;
-            background: var(--deep-red); padding: 10px 5px;
-            cursor: pointer; border-radius: 5px 0 0 5px;
-        }
-
-        main { flex: 1; padding: 20px; overflow-y: auto; }
-        footer { 
-            background: #000; text-align: center; 
-            padding: 8px; font-size: 12px; border-top: 1px solid var(--deep-red);
-        }
+        footer { background: #000; text-align: center; padding: 10px; font-size: 12px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="marquee">
+<div class="moving-bar">
     <span>M.A.M All Free Documentaries / Relax and enjoy....</span>
 </div>
 
 <header>
-    <div class="date-box">
-        <div id="gDate"></div>
-        <div id="hDate"></div>
+    <div class="date-info">
+        <div id="dateG"></div>
+        <div id="dateH"></div>
         <div>22°C Clear</div>
     </div>
-    <div class="brand-name" style="font-size: 18px; color: var(--deep-red); font-weight: bold;">TowMes</div>
-    <div class="clock-container">
-        <div class="hand minute"></div>
-        <div class="second hand"></div>
+    <div class="brand-name">TowMes</div>
+    <div class="clocks-box">
+        <div id="digital-clock">00:00:00</div>
+        <div class="analog">
+            <div id="hour" class="hand h-hand"></div>
+            <div id="min" class="hand m-hand"></div>
+            <div id="sec" class="hand s-hand"></div>
+        </div>
     </div>
 </header>
 
 <div class="main-layout">
-    <nav id="doors"></nav>
-    <main>
-        <div id="movieGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px;">
-            <p style="color: #444;">Waiting for your professional links...</p>
+    <nav id="doorsList"></nav>
+    <main id="mainArea">
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px;">
+            <p style="color:#333; font-size: 11px;">Waiting for your links to fill this space...</p>
         </div>
     </main>
+
+    <button class="menu-btn" onclick="toggleMenu()">◀</button>
+    <div id="sideMenu">
+        <div class="side-item">📤 Share App</div>
+        <div class="side-item">📧 Contact Us</div>
+        <div class="side-item">ℹ️ About Azraq2</div>
+    </div>
 </div>
 
-<div id="sideArrow">◀</div>
+<button id="goUp" onclick="scrollToTop()">▲</button>
 
 <footer>Developed by TowMes©™</footer>
 
 <script>
+    // 1. جميع الأبواب العشرين (إنجليزي بوند وعربي أصفر)
     const cats = [
-        {en: "Deep Blue", ar: "أسرار البحار"},
-        {en: "Forests", ar: "قلب الغابات"},
-        {en: "Universe", ar: "الكون والفضاء"},
-        {en: "Ancient", ar: "تاريخ الحضارات"},
-        {en: "Geology", ar: "تضاريس الأرض"},
-        {en: "Sociology", ar: "علم الاجتماع"},
-        {en: "Psychology", ar: "علم النفس"},
-        {en: "Philosophy", ar: "الفلسفة"}
+        {en: "Deep Blue", ar: "أسرار البحار"}, {en: "Forests", ar: "قلب الغابات"},
+        {en: "Universe", ar: "الكون والفضاء"}, {en: "Ancient", ar: "تاريخ الحضارات"},
+        {en: "Geology", ar: "تضاريس الأرض"}, {en: "City Bio", ar: "سيرة المدن"},
+        {en: "Discovery", ar: "الاكتشافات"}, {en: "War & Fire", ar: "عالم الحروب"},
+        {en: "Psychology", ar: "علم النفس"}, {en: "Philosophy", ar: "الفلسفة"},
+        {en: "Sociology", ar: "علم الاجتماع"}, {en: "Future AI", ar: "ذكاء المستقبل"},
+        {en: "Human Body", ar: "جسم الإنسان"}, {en: "Disasters", ar: "كوارث طبيعية"},
+        {en: "Aviation", ar: "عالم الطيران"}, {en: "Indian Heritage", ar: "عجائب الهند"},
+        {en: "Animal Kingdom", ar: "مملكة الحيوان"}, {en: "Economy", ar: "عالم المال"},
+        {en: "Arts", ar: "روح الإبداع"}, {en: "Mysteries", ar: "أرواح غامضة"}
     ];
 
-    const nav = document.getElementById('doors');
+    const nav = document.getElementById('doorsList');
     cats.forEach(c => {
         nav.innerHTML += `<div class="door"><span>${c.en}</span><small>${c.ar}</small></div>`;
     });
 
-    document.getElementById('gDate').innerText = new Date().toLocaleDateString('en-GB');
-    const hOpt = { calendar: 'islamic-uma', day: 'numeric', month: 'long', year: 'numeric' };
-    document.getElementById('hDate').innerText = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-uma', hOpt).format(new Date());
-</script>
+    // 2. التحكم في الساعات (عقارب + رقمية)
+    setInterval(() => {
+        const now = new Date();
+        const s = now.getSeconds(); const m = now.getMinutes(); const h = now.getHours();
+        document.getElementById('sec').style.transform = `translateX(-50%) rotate(${s * 6}deg)`;
+        document.getElementById('min').style.transform = `translateX(-50%) rotate(${m * 6}deg)`;
+        document.getElementById('hour').style.transform = `translateX(-50%) rotate(${h * 30 + m/2}deg)`;
+        document.getElementById('digital-clock').innerText = now.toLocaleTimeString('en-GB', {hour12:false});
+    }, 1000);
 
+    // 3. المنيو الجانبي
+    let open = false;
+    function toggleMenu() {
+        const m = document.getElementById('sideMenu');
+        const b = document.querySelector('.menu-btn');
+        if(!open) { m.style.right = "0"; b.innerText = "▶"; open = true; }
+        else { m.style.right = "-210px"; b.innerText = "◀"; open = false; }
+    }
+
+    // 4. التاريخ والسكيرول
+    document.getElementById('dateG').innerText = new Date().toLocaleDateString('en-GB');
+    const hOpt = { calendar: 'islamic-uma', day: 'numeric', month: 'long', year: 'numeric' };
+    document.getElementById('dateH').innerText = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-uma', hOpt).format(new Date());
+
+    const main = document.getElementById('mainArea');
+    main.onscroll = () => { document.getElementById('goUp').style.display = main.scrollTop > 100 ? 'block' : 'none'; };
+    function scrollToTop() { main.scrollTo({top:0, behavior:'smooth'}); }
+</script>
 </body>
 </html>
